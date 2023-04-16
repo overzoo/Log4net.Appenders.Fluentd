@@ -1,7 +1,13 @@
 
 # Log4net.Appenders.Fluentd
 This is Fork of Fluentd appender for Log4net.
- 
+
+## Fork changes
+   - Fixed unable using properties as metrics data. LoggingEvent loggingEvent in Append doesn't contain properties by default.
+   - PropertiesFilterRegex parameter. You can configure which parameters by name will appear in metrix of fluentd
+   - Minor: Demo app run in net 6.0
+   - Using thread to send log
+
 ## Installation
 
     PM> Install-Package Log4net.Appenders.Fluentd
@@ -50,7 +56,26 @@ If you have any idea for an improvement or found a bug, do not hesitate to open 
 
 Log4net.Appenders.Fluentd is distributed under MIT License.
 
-## Changes
-   - Fixed unable using properties as metrics data. LoggingEvent loggingEvent in Append doesn't contain properties by default.
-   - PropertiesFilterRegex parameter. You can configure which parameters by name will appear in metrix of fluentd
-   - Minor: Demo app run in net 6.0
+##  PropertiesFilterRegex behavior
+
+```
+    <IncludeAllProperties>false</IncludeAllProperties>
+    <PropertiesFilterRegex>^metric</PropertiesFilterRegex> <!-- works ony if IncludeAllProperties is true -->
+```
+```
+2023-04-16T16:57:29+00:00	YourTagHere	{"level":"ERROR","message":"2023-04-16 19:57:29.404 [1] [(null)] ERROR DemoApp.Program - Error Message\r\nSystem.Exception: This is Exception\r\n","logger_name":"DemoApp.Program"}
+```
+```
+    <IncludeAllProperties>true</IncludeAllProperties>
+    <PropertiesFilterRegex>^metric</PropertiesFilterRegex> <!-- works ony if IncludeAllProperties is true -->
+```
+```
+2023-04-16T16:58:41+00:00	YourTagHere	{"level":"ERROR","message":"2023-04-16 19:58:41.630 [1] [(null)] ERROR DemoApp.Program - Error Message\r\nSystem.Exception: This is Exception\r\n","logger_name":"DemoApp.Program","metric_down_count":1,"metric_managed_thread_id":1}
+```
+```
+    <IncludeAllProperties>true</IncludeAllProperties>
+    <PropertiesFilterRegex></PropertiesFilterRegex> <!-- works ony if IncludeAllProperties is true -->
+```
+```
+2023-04-16T16:59:44+00:00	YourTagHere	{"level":"ERROR","message":"2023-04-16 19:59:44.170 [1] [(null)] ERROR DemoApp.Program - Error Message\r\nSystem.Exception: This is Exception\r\n","logger_name":"DemoApp.Program","log4net:HostName":"OVERZOO","log4net:Identity":"","log4net:UserName":"OVERZOO\\overzoo","animal":"Zebra","metric_down_count":1}
+```

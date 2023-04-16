@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Authors>MCKanpolat</Authors>
     <Description>Fluentd log4net appender</Description>
-    <PackageProjectUrl>https://github.com/MCKanpolat/Log4net.Appenders.Fluentd</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MCKanpolat/Log4net.Appenders.Fluentd</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/overzoo/Log4net.Appenders.Fluentd</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/overzoo/Log4net.Appenders.Fluentd</RepositoryUrl>
     <PackageTags>log4net fluentd appender</PackageTags>
     <PackageReleaseNotes />
     <Copyright>MCKanpolat</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
