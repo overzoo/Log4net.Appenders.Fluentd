@@ -1,11 +1,12 @@
-﻿using System;
+﻿using log4net.Appender;
+using log4net.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
-using log4net.Appender;
-using log4net.Core;
+using System.Text.RegularExpressions;
 
 namespace Log4net.Appenders.Fluentd
 {
@@ -23,6 +24,7 @@ namespace Log4net.Appenders.Fluentd
             LingerTime = 1000;
             EmitStackTraceWhenAvailable = false;
             Tag = Assembly.GetCallingAssembly().GetName().Name;
+            PropertiesFilterRegex = "";
         }
 
         public string Host { get; set; }
@@ -49,16 +51,29 @@ namespace Log4net.Appenders.Fluentd
 
         public bool IncludeAllProperties { get; set; }
 
+        // TODO: do list of regexes ?
+        public string PropertiesFilterRegex { get; set; }
+
+        private Regex filterList = null;
+
         private TcpClient _client;
 
         private Stream _stream;
 
         private FluentdEmitter _emitter;
 
-
         public override void ActivateOptions()
         {
             base.ActivateOptions();
+
+            try
+            {
+                filterList = string.IsNullOrEmpty(PropertiesFilterRegex) ? null : new Regex(PropertiesFilterRegex);
+            }
+            catch (Exception ex)
+            {
+                base.ErrorHandler.Error($"Unable use \"{PropertiesFilterRegex}\" as regex - {ex.Message}");
+            }
         }
 
         protected override void Append(LoggingEvent loggingEvent)
@@ -103,7 +118,10 @@ namespace Log4net.Appenders.Fluentd
                     if (val == null)
                         continue;
 
-                    record.Add(key, SerializePropertyValue(key, val));
+                    if (filterList == null || filterList.IsMatch(key))
+                    {
+                        record.Add(key, SerializePropertyValue(key, val));
+                    }
                 }
             }
 

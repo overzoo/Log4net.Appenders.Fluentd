@@ -1,6 +1,6 @@
 
 # Log4net.Appenders.Fluentd
-Fluentd appender for Log4net.
+This is Fork of Fluentd appender for Log4net.
  
 ## Installation
 
@@ -24,6 +24,7 @@ Fluentd appender for Log4net.
     <LingerTime>1000</LingerTime>
     <EmitStackTraceWhenAvailable>true</EmitStackTraceWhenAvailable>
     <IncludeAllProperties>false</IncludeAllProperties>
+    <PropertiesFilterRegex>^metric</PropertiesFilterRegex> <!-- works ony if IncludeAllProperties is true -->
     <layout type="log4net.Layout.PatternLayout">
       <conversionPattern value="%date{yyyy-MM-dd HH:mm:ss.fff} [%thread] [%property{Context}] %-5level %logger - %message%newline" />
     </layout>
@@ -48,3 +49,8 @@ If you have any idea for an improvement or found a bug, do not hesitate to open 
 ## License
 
 Log4net.Appenders.Fluentd is distributed under MIT License.
+
+## Changes
+   - Fixed unable using properties as metrics data. LoggingEvent loggingEvent in Append doesn't contain properties by default.
+   - PropertiesFilterRegex parameter. You can configure which parameters by name will appear in metrix of fluentd
+   - Minor: Demo app run in net 6.0
