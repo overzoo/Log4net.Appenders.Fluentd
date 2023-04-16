@@ -91,6 +91,10 @@ namespace Log4net.Appenders.Fluentd
                 record.Add("stacktrace", transcodedFrames);
             }
 
+            // to fix empty loggingEvent.Properties
+            // https://stackoverflow.com/questions/35903594/log4net-logicalthreadcontext-properties-does-not-work-correctly-with-owinmiddlew
+            loggingEvent.GetLoggingEventData();
+
             if (IncludeAllProperties && loggingEvent.Properties.Count > 0)
             {
                 foreach (var key in loggingEvent.Properties.GetKeys())
